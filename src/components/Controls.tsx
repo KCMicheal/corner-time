@@ -8,6 +8,7 @@ import {
   MaximizeIcon,
   MinimizeIcon,
 } from "lucide-react";
+
 interface ControlsProps {
   mode: "clock" | "timer" | "stopwatch";
   toggleMode: () => void;
@@ -20,6 +21,7 @@ interface ControlsProps {
   toggleFullscreen: () => void;
   isFullscreen: boolean;
 }
+
 export const Controls: React.FC<ControlsProps> = ({
   mode,
   toggleMode,
@@ -27,6 +29,7 @@ export const Controls: React.FC<ControlsProps> = ({
   setIsRunning,
   timerDuration,
   setTimerDuration,
+  timeRemaining,
   setTimeRemaining,
   toggleFullscreen,
   isFullscreen,
@@ -35,9 +38,11 @@ export const Controls: React.FC<ControlsProps> = ({
   const [customMinutes, setCustomMinutes] = useState("25");
   const [customSeconds, setCustomSeconds] = useState("00");
   const [showCustomInput, setShowCustomInput] = useState(false);
+
   const handleStartPause = () => {
     setIsRunning(!isRunning);
   };
+
   const handleReset = () => {
     setIsRunning(false);
     if (mode === "timer") {
@@ -46,6 +51,7 @@ export const Controls: React.FC<ControlsProps> = ({
       setTimeRemaining(0);
     }
   };
+
   const handleTimerDurationChange = (minutes: number) => {
     const newDuration = minutes * 60;
     setTimerDuration(newDuration);
@@ -54,6 +60,7 @@ export const Controls: React.FC<ControlsProps> = ({
     }
     setShowCustomInput(false);
   };
+
   const handleCustomTimeSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const hours = parseInt(customHours) || 0;
@@ -66,6 +73,7 @@ export const Controls: React.FC<ControlsProps> = ({
     }
     setShowCustomInput(false);
   };
+
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     setter: React.Dispatch<React.SetStateAction<string>>,
@@ -85,6 +93,7 @@ export const Controls: React.FC<ControlsProps> = ({
     }
     setter(value);
   };
+
   const toggleCustomInput = () => {
     setShowCustomInput(!showCustomInput);
   };
@@ -135,6 +144,12 @@ export const Controls: React.FC<ControlsProps> = ({
         <div className="flex flex-col items-center space-y-4">
           <div className="flex space-x-4 mt-4">
             <button
+              onClick={() => handleTimerDurationChange(5)}
+              className="px-4 py-2 bg-blue-900 hover:bg-blue-800 text-blue-300 rounded-lg"
+            >
+              5min
+            </button>
+            <button
               onClick={() => handleTimerDurationChange(15)}
               className="px-4 py-2 bg-blue-900 hover:bg-blue-800 text-blue-300 rounded-lg"
             >
@@ -145,12 +160,6 @@ export const Controls: React.FC<ControlsProps> = ({
               className="px-4 py-2 bg-blue-900 hover:bg-blue-800 text-blue-300 rounded-lg"
             >
               25min
-            </button>
-            <button
-              onClick={() => handleTimerDurationChange(50)}
-              className="px-4 py-2 bg-blue-900 hover:bg-blue-800 text-blue-300 rounded-lg"
-            >
-              50min
             </button>
             <button
               onClick={() => handleTimerDurationChange(60)}
