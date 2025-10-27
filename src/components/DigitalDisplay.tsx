@@ -106,12 +106,13 @@ export const DigitalDisplay: React.FC<DigitalDisplayProps> = ({
         transition={{ duration: 0.3 }}
       >
         <div
-          className="digital-display text-8xl md:text-9xl tracking-wider text-blue-400 text-pretty bg-black p-12 rounded-md w-full text-center relative min-h-[200px] flex items-center justify-center"
+          className="digital-display text-8xl md:text-9xl tracking-tighter text-blue-400 text-pretty bg-black p-12 rounded-md w-full text-center relative min-h-[200px] flex items-center justify-center"
           style={{
             textShadow: "0 0 10px #3B82F6, 0 0 20px #3B82F6",
             boxShadow: showCompletion
               ? "0 0 30px #10B981, 0 0 60px #10B981"
               : "0 0 20px #3B82F6, 0 0 40px #3B82F6",
+              width: "800px"
           }}
         >
           {formatTimeDisplay()}
