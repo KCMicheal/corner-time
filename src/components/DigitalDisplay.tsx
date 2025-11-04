@@ -166,7 +166,7 @@ export const DigitalDisplay: React.FC<DigitalDisplayProps> = ({
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
-            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-green-500 text-4xl font-bold z-10"
+            className="absolute top-1/2 left-50 transform -translate-x-1/2 -translate-y-1/2 text-green-500 text-4xl font-bold z-10"
             style={{ fontFamily: "Technology-Italic, monospace" }}
           >
             FOCUS COMPLETE! 🎯
