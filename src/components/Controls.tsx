@@ -16,7 +16,6 @@ interface ControlsProps {
   setIsRunning: React.Dispatch<React.SetStateAction<boolean>>;
   timerDuration: number;
   setTimerDuration: React.Dispatch<React.SetStateAction<number>>;
-  timeRemaining: number;
   setTimeRemaining: React.Dispatch<React.SetStateAction<number>>;
   toggleFullscreen: () => void;
   isFullscreen: boolean;
@@ -29,7 +28,6 @@ export const Controls: React.FC<ControlsProps> = ({
   setIsRunning,
   timerDuration,
   setTimerDuration,
-  timeRemaining,
   setTimeRemaining,
   toggleFullscreen,
   isFullscreen,
@@ -63,9 +61,9 @@ export const Controls: React.FC<ControlsProps> = ({
 
   const handleCustomTimeSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const hours = parseInt(customHours) || 0;
-    const minutes = parseInt(customMinutes) || 0;
-    const seconds = parseInt(customSeconds) || 0;
+    const hours = parseInt(customHours || "0") || 0;
+    const minutes = parseInt(customMinutes || "0") || 0;
+    const seconds = parseInt(customSeconds || "0") || 0;
     const totalSeconds = hours * 3600 + minutes * 60 + seconds;
     setTimerDuration(totalSeconds);
     if (!isRunning && mode === "timer") {
@@ -80,18 +78,16 @@ export const Controls: React.FC<ControlsProps> = ({
     max: number
   ) => {
     let value = e.target.value.replace(/\D/g, "");
-    // Ensure value is within range
-    const numValue = parseInt(value) || 0;
-    if (numValue > max) {
+    // Allow typing freely (0-2 chars), clamp only if numeric exceeds max
+    if (value === "") {
+      setter("");
+      return;
+    }
+    const numValue = parseInt(value, 10);
+    if (!Number.isNaN(numValue) && numValue > max) {
       value = max.toString();
     }
-    // Pad with leading zero if single digit
-    if (value.length === 1) {
-      value = value.padStart(2, "0");
-    } else if (value.length === 0) {
-      value = "00";
-    }
-    setter(value);
+    setter(value.slice(0, 2));
   };
 
   const toggleCustomInput = () => {
@@ -184,7 +180,12 @@ export const Controls: React.FC<ControlsProps> = ({
                 inputMode="numeric"
                 pattern="[0-9]*"
                 value={customHours}
-                onChange={(e) => handleInputChange(e, setCustomHours, 23)}
+                onChange={(e) => handleInputChange(e, setCustomHours, 99)}
+                onBlur={(e) =>
+                  setCustomHours(
+                    (e.target.value || "0").toString().padStart(2, "0")
+                  )
+                }
                 className="time-input digital-display text-xl"
                 maxLength={2}
                 placeholder="hh"
@@ -196,6 +197,11 @@ export const Controls: React.FC<ControlsProps> = ({
                 pattern="[0-9]*"
                 value={customMinutes}
                 onChange={(e) => handleInputChange(e, setCustomMinutes, 59)}
+                onBlur={(e) =>
+                  setCustomMinutes(
+                    (e.target.value || "0").toString().padStart(2, "0")
+                  )
+                }
                 className="time-input digital-display text-xl"
                 maxLength={2}
                 placeholder="mm"
@@ -207,6 +213,11 @@ export const Controls: React.FC<ControlsProps> = ({
                 pattern="[0-9]*"
                 value={customSeconds}
                 onChange={(e) => handleInputChange(e, setCustomSeconds, 59)}
+                onBlur={(e) =>
+                  setCustomSeconds(
+                    (e.target.value || "0").toString().padStart(2, "0")
+                  )
+                }
                 className="time-input digital-display text-xl"
                 maxLength={2}
                 placeholder="ss"
