@@ -136,7 +136,6 @@ export default function App() {
           setIsRunning={setIsRunning}
           timerDuration={timerDuration}
           setTimerDuration={setTimerDuration}
-          timeRemaining={timeRemaining}
           setTimeRemaining={setTimeRemaining}
           toggleFullscreen={toggleFullscreen}
           isFullscreen={isFullscreen}
