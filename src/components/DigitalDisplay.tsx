@@ -60,23 +60,37 @@ export const DigitalDisplay: React.FC<DigitalDisplayProps> = ({
   }, [mode, isRunning, setTimeRemaining]);
 
   const formatTimeDisplay = () => {
+    const two = (n: number) => Math.floor(n).toString().padStart(2, "0");
+
     if (mode === "clock") {
-      const hours = currentTime.getHours().toString().padStart(2, "0");
-      const minutes = currentTime.getMinutes().toString().padStart(2, "0");
-      const seconds = currentTime.getSeconds().toString().padStart(2, "0");
-      return `${hours} : ${minutes} : ${seconds}`;
+      const hours = two(currentTime.getHours());
+      const minutes = two(currentTime.getMinutes());
+      const seconds = two(currentTime.getSeconds());
+
+      return (
+        <div className="inline-flex items-center gap-4">
+          <span className="inline-flex w-[2ch] justify-center">{hours}</span>
+          <span>:</span>
+          <span className="inline-flex w-[2ch] justify-center">{minutes}</span>
+          <span>:</span>
+          <span className="inline-flex w-[2ch] justify-center">{seconds}</span>
+        </div>
+      );
     } else {
       // For timer and stopwatch
-      const hours = Math.floor(timeRemaining / 3600)
-        .toString()
-        .padStart(2, "0");
-      const minutes = Math.floor((timeRemaining % 3600) / 60)
-        .toString()
-        .padStart(2, "0");
-      const seconds = Math.floor(timeRemaining % 60)
-        .toString()
-        .padStart(2, "0");
-      return `${hours} : ${minutes} : ${seconds}`;
+      const hours = two(timeRemaining / 3600);
+      const minutes = two((timeRemaining % 3600) / 60);
+      const seconds = two(timeRemaining % 60);
+
+      return (
+        <div className="inline-flex items-center gap-4">
+          <span className="inline-flex w-[2ch] justify-center">{hours}</span>
+          <span>:</span>
+          <span className="inline-flex w-[2ch] justify-center">{minutes}</span>
+          <span>:</span>
+          <span className="inline-flex w-[2ch] justify-center">{seconds}</span>
+        </div>
+      );
     }
   };
 
@@ -106,12 +120,13 @@ export const DigitalDisplay: React.FC<DigitalDisplayProps> = ({
         transition={{ duration: 0.3 }}
       >
         <div
-          className="digital-display text-8xl md:text-9xl tracking-wider text-blue-400 text-pretty bg-black p-12 rounded-md w-full text-center relative min-h-[200px] flex items-center justify-center"
+          className="digital-display text-8xl md:text-9xl text-blue-400 text-pretty bg-black p-12 rounded-md w-full text-center relative min-h-[200px] flex items-center justify-center"
           style={{
             textShadow: "0 0 10px #3B82F6, 0 0 20px #3B82F6",
             boxShadow: showCompletion
               ? "0 0 30px #10B981, 0 0 60px #10B981"
               : "0 0 20px #3B82F6, 0 0 40px #3B82F6",
+            width: "700px",
           }}
         >
           {formatTimeDisplay()}
