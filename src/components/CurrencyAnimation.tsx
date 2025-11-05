@@ -28,7 +28,7 @@ const positionStyles: Record<CurrencyPosition, string> = {
   "top-right": "-top-8 right-0",
   "middle-left": "top-1/2 -translate-y-1/2 left-0",
   "middle-center":
-    "top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2",
+  "top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2",
   "middle-right": "top-1/2 -translate-y-1/2 right-0",
   "bottom-left": "-bottom-8 left-0",
   "bottom-center": "-bottom-8 left-1/2 transform -translate-x-1/2",

@@ -36,6 +36,9 @@ const COUNTRY_CURRENCY_MAP: Record<string, Currency> = {
   AU: { code: "AUD", symbol: "A$", name: "Australian Dollar" },
   RU: { code: "RUB", symbol: "₽", name: "Russian Ruble" },
   MX: { code: "MXN", symbol: "$", name: "Mexican Peso" },
+  NG: { code: "NGN", symbol: "₦", name: "Nigerian Naira" },
+  SA: { code: "SAR", symbol: "ر.س", name: "Saudi Riyal" },
+  AE: { code: "AED", symbol: "د.إ", name: "United Arab Emirates Dirham" }
   // Add more countries as needed
 };
 
@@ -45,7 +48,7 @@ export const getLocationData = async (): Promise<LocationData> => {
     const response = await fetch("https://ipapi.co/json/");
     const data = await response.json();
 
-    const countryCode = data.country_code;
+    const countryCode: string = (data.country_code || "").toUpperCase();
     const currency = COUNTRY_CURRENCY_MAP[countryCode] || GLOBAL_CURRENCIES[0];
 
     return {
