@@ -23,24 +23,23 @@ export const DraggableCurrency: React.FC<DraggableCurrencyProps> = ({
   const [showNegativeSignal, setShowNegativeSignal] = useState(false);
   const [position, setPosition] = useState(savedPosition);
 
-  // Animation on every second depending on running/paused state
+  // Animation pulse every second depending on running/paused state
   useEffect(() => {
-    if (timeRemaining > 0 && !isCompleted) {
-      const interval = setInterval(() => {
-        if (isRunning) {
-          setShowPositiveSignal(true);
-          setShowNegativeSignal(false);
-          setTimeout(() => setShowPositiveSignal(false), 600);
-        } else {
-          setShowNegativeSignal(true);
-          setShowPositiveSignal(false);
-          setTimeout(() => setShowNegativeSignal(false), 600);
-        }
-      }, 1000);
+    if (isCompleted || timeRemaining === 0) return;
+    const interval = setInterval(() => {
+      if (isRunning) {
+        setShowPositiveSignal(true);
+        setShowNegativeSignal(false);
+        setTimeout(() => setShowPositiveSignal(false), 600);
+      } else {
+        setShowNegativeSignal(true);
+        setShowPositiveSignal(false);
+        setTimeout(() => setShowNegativeSignal(false), 600);
+      }
+    }, 1000);
 
-      return () => clearInterval(interval);
-    }
-  }, [isRunning, timeRemaining, isCompleted]);
+    return () => clearInterval(interval);
+  }, [isRunning, isCompleted]);
 
   // Reset all signals when timer stops or completes
   useEffect(() => {

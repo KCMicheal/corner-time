@@ -7,7 +7,6 @@ interface DigitalDisplayProps {
   mode: "clock" | "timer" | "stopwatch";
   isRunning: boolean;
   timeRemaining: number;
-  setTimeRemaining: React.Dispatch<React.SetStateAction<number>>;
   currency?: Currency;
   locationData?: LocationData;
   onCurrencyPositionChange: (position: { x: number; y: number }) => void;
@@ -18,7 +17,6 @@ export const DigitalDisplay: React.FC<DigitalDisplayProps> = ({
   mode,
   isRunning,
   timeRemaining,
-  setTimeRemaining,
   currency,
   locationData,
   onCurrencyPositionChange,
@@ -28,44 +26,45 @@ export const DigitalDisplay: React.FC<DigitalDisplayProps> = ({
   const [isCompleted, setIsCompleted] = useState(false);
   const [showCompletion, setShowCompletion] = useState(false);
 
+  // Only update clock time locally; timer/stopwatch are driven by parent via props
   useEffect(() => {
-    let intervalId: number;
-    if (mode === "clock") {
-      // Update clock every second
-      intervalId = window.setInterval(() => {
-        setCurrentTime(new Date());
-      }, 1000);
-    } else if (isRunning) {
-      // Handle timer countdown or stopwatch count up
-      intervalId = window.setInterval(() => {
-        setTimeRemaining((prev) => {
-          if (mode === "timer" && prev <= 0) {
-            setIsCompleted(true);
-            setShowCompletion(true);
-            setTimeout(() => {
-              setIsCompleted(false);
-              setShowCompletion(false);
-            }, 3000);
-            return 0;
-          }
-          return mode === "timer" ? prev - 1 : prev + 1;
-        });
-      }, 1000);
+    if (mode !== "clock") return;
+    const intervalId = window.setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+    return () => clearInterval(intervalId);
+  }, [mode]);
+
+  // Trigger completion animation when timer hits zero
+  useEffect(() => {
+    if (mode === "timer" && isRunning && timeRemaining <= 0) {
+      setIsCompleted(true);
+      setShowCompletion(true);
+      const t = setTimeout(() => {
+        setIsCompleted(false);
+        setShowCompletion(false);
+      }, 3000);
+      return () => clearTimeout(t);
     }
-    return () => {
-      if (intervalId) {
-        clearInterval(intervalId);
-      }
-    };
-  }, [mode, isRunning, setTimeRemaining]);
+  }, [mode, isRunning, timeRemaining]);
 
   const formatTimeDisplay = () => {
     const two = (n: number) => Math.floor(n).toString().padStart(2, "0");
 
     if (mode === "clock") {
-      const hours = two(currentTime.getHours());
-      const minutes = two(currentTime.getMinutes());
-      const seconds = two(currentTime.getSeconds());
+      const tz = locationData?.timezone; // e.g., "America/Toronto"
+      const parts = new Intl.DateTimeFormat(undefined, {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false,
+        timeZone: tz,
+      }).formatToParts(currentTime);
+      const get = (type: string) =>
+        parts.find((p) => p.type === type)?.value || "00";
+      const hours = get("hour");
+      const minutes = get("minute");
+      const seconds = get("second");
 
       return (
         <div className="inline-flex items-center gap-4">
