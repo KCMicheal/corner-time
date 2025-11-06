@@ -165,4 +165,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**Built with ❤️ for the future of productivity**
+**Built with ❤️ From BackBoneLabs for the future of productivity**
